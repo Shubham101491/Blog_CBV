@@ -1,3 +1,4 @@
+# video 168
 from django.shortcuts import render,redirect,get_object_or_404
 from django.views.generic import (TemplateView,ListView,
                                   DetailView,CreateView,
@@ -5,10 +6,13 @@ from django.views.generic import (TemplateView,ListView,
 from django.utils import timezone
 from .models import Post, Comment
 from home.forms import PostForm,CommentForm
-from django.contrib.auth.mixins import LoginRequiredMixin
+# success_url
 from django.urls import reverse_lazy
-from django.contrib.auth.decorators import login_required
 
+# LoginRequiredMixin for CBV with decorators
+from django.contrib.auth.mixins import LoginRequiredMixin
+# decorator only use in function based view
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 class AboutView(TemplateView):
@@ -18,6 +22,7 @@ class AboutView(TemplateView):
 class PostListView(ListView):
     model = Post
 
+    # for more understand follow V-168 time-8:00
     def get_queryset(self):
         return Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
 
@@ -43,9 +48,10 @@ class PostDeleteView(LoginRequiredMixin,DeleteView):
     model = Post
     success_url = reverse_lazy('post_list')
 
+# for save post when not published
 class DraftListView(LoginRequiredMixin,ListView):
     login_url = '/login/'
-    redirect_field_name = 'blog/post_draft_list.html'
+    redirect_field_name = 'home/post_draft_list.html'
 
     model = Post
 
